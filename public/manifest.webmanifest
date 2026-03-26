@@ -1,0 +1,37 @@
+{
+  "name": "El Farolito",
+  "short_name": "El Farolito",
+  "description": "Tu tarjeta de lealtad digital. Acumula sellos y gana un café gratis.",
+  "theme_color": "#f59e0b",
+  "background_color": "#0d0603",
+  "display": "standalone",
+  "orientation": "portrait",
+  "scope": "/",
+  "start_url": "/",
+  "lang": "es",
+  "categories": ["food", "lifestyle"],
+  "icons": [
+    {
+      "src": "icons/circulo-blanco.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Mi QR",
+      "short_name": "QR",
+      "description": "Muestra tu QR para sumar sello",
+      "url": "/qr",
+      "icons": [{"src": "icons/circulo-blanco.png", "sizes": "512x512"}]
+    },
+    {
+      "name": "Ver Menú",
+      "short_name": "Menú",
+      "description": "Consulta nuestra carta",
+      "url": "/menu",
+      "icons": [{"src": "icons/circulo-blanco.png", "sizes": "512x512"}]
+    }
+  ]
+}

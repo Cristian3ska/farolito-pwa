@@ -1,0 +1,40 @@
+<nav class="tab-bar" *ngIf="auth.isLoggedIn">
+  <a routerLink="/home" routerLinkActive="active" id="nav-home" class="tab-item">
+    <svg class="tab-icon" viewBox="0 0 24 24" fill="none" width="24" height="24">
+      <path d="M4 10.667L12 4l8 6.667V20a.667.667 0 01-.667.667H15.333V14h-6.666v6.667H4.667A.667.667 0 014 20v-9.333z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <span class="tab-label">Inicio</span>
+  </a>
+
+  <a routerLink="/qr" routerLinkActive="active" id="nav-qr" class="tab-item tab-item--featured">
+    <div class="tab-qr-pill">
+      <svg class="tab-icon" viewBox="0 0 24 24" fill="none" width="22" height="22">
+        <rect x="3" y="3" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.6"/>
+        <rect x="5" y="5" width="3" height="3" rx="0.5" fill="currentColor"/>
+        <rect x="14" y="3" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.6"/>
+        <rect x="16" y="5" width="3" height="3" rx="0.5" fill="currentColor"/>
+        <rect x="3" y="14" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.6"/>
+        <rect x="5" y="16" width="3" height="3" rx="0.5" fill="currentColor"/>
+        <path d="M14 14h2v2m0 0h2v-2m-2 2v2h2m2-6v2h-2m0 4h2v2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <span class="tab-label">Mi QR</span>
+  </a>
+
+  <a routerLink="/menu" routerLinkActive="active" id="nav-menu" class="tab-item">
+    <svg class="tab-icon" viewBox="0 0 24 24" fill="none" width="24" height="24">
+      <path d="M17 8h1a4 4 0 010 8h-1" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M3 8h14v9a4 4 0 01-4 4H7a4 4 0 01-4-4V8z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M6 2v3M10 2v3M14 2v3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+    </svg>
+    <span class="tab-label">Menú</span>
+  </a>
+
+  <a routerLink="/profile" routerLinkActive="active" id="nav-profile" class="tab-item">
+    <svg class="tab-icon" viewBox="0 0 24 24" fill="none" width="24" height="24">
+      <circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="1.6"/>
+      <path d="M4 20c0-3.314 3.582-6 8-6s8 2.686 8 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+    </svg>
+    <span class="tab-label">Perfil</span>
+  </a>
+</nav>

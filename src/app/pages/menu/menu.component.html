@@ -1,0 +1,50 @@
+<div class="menu-page">
+  <div class="nav-header">
+    <p class="nav-header__eyebrow">El Farolito</p>
+    <h1 class="nav-header__title">Nuestra Carta</h1>
+  </div>
+
+  <!-- Category tabs (scrollable) -->
+  <div class="tabs-wrap">
+    <div class="tabs">
+      <button *ngFor="let cat of menuSvc.categories()"
+              class="tab"
+              [class.tab--active]="activeCategory === cat"
+              (click)="setCategory(cat)"
+              [id]="'tab-' + cat.split(' ')[0].toLowerCase()">
+        {{ cat }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Items -->
+  <div class="menu-list">
+    <div class="menu-item" *ngFor="let item of filteredItems">
+      <div class="menu-item__icon-wrap">
+        <!-- Coffee icon -->
+        <svg *ngIf="item.category !== 'Snacks'" viewBox="0 0 24 24" fill="none" width="20" height="20">
+          <path d="M17 8h1a4 4 0 010 8h-1" stroke="var(--blue)" stroke-width="1.5" stroke-linecap="round"/>
+          <path d="M3 8h14v9a4 4 0 01-4 4H7a4 4 0 01-4-4V8z" stroke="var(--blue)" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        <!-- Snack icon -->
+        <svg *ngIf="item.category === 'Snacks'" viewBox="0 0 24 24" fill="none" width="20" height="20">
+          <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.501 5.501 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" stroke="var(--sand)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="menu-item__info">
+        <p class="menu-item__name">{{ item.name }}</p>
+        <p class="menu-item__desc">{{ item.description }}</p>
+      </div>
+      <span class="menu-item__price">{{ item.price }}</span>
+    </div>
+  </div>
+
+  <!-- Origin note -->
+  <div class="origin-banner">
+    <svg viewBox="0 0 24 24" fill="none" width="18" height="18">
+      <path d="M12 2a10 10 0 100 20A10 10 0 0012 2zm0 0c2.76 0 5 4.477 5 10s-2.24 10-5 10-5-4.477-5-10S9.24 2 12 2z" stroke="var(--steel)" stroke-width="1.5"/>
+      <path d="M2 12h20" stroke="var(--steel)" stroke-width="1.5"/>
+    </svg>
+    <p>Granos de <strong>origen único</strong>, tostados localmente con amor artesanal.</p>
+  </div>
+</div>

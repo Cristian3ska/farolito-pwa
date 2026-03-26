@@ -1,0 +1,146 @@
+.qr-page { padding-bottom: 90px; }
+
+.qr-body {
+  padding: 0 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.qr-card {
+  background: var(--surface-1);
+  border-radius: var(--r-xl);
+  border: 1px solid var(--border);
+  padding: 24px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.user-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  background: var(--surface-2);
+  border-radius: var(--r-full);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--t2);
+}
+
+.canvas-frame {
+  padding: 12px;
+  background: #fff;
+  border-radius: 16px;
+
+  canvas {
+    display: block;
+    border-radius: 8px;
+  }
+}
+
+.countdown {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  &__track {
+    height: 2px;
+    background: var(--surface-3);
+    border-radius: 99px;
+    overflow: hidden;
+  }
+
+  &__fill {
+    height: 100%;
+    background: var(--blue);
+    border-radius: 99px;
+    transition: width 1s linear;
+  }
+
+  &__label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    font-size: 12px;
+    color: var(--t3);
+
+    strong { color: var(--t2); font-weight: 600; }
+    svg { color: var(--t3); }
+  }
+}
+
+.stamps-strip {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+
+  &-label {
+    font-size: 12px;
+    color: var(--t3);
+    text-align: center;
+    margin-top: -8px;
+  }
+}
+
+.strip-dot {
+  width: 20px;
+  height: 6px;
+  border-radius: 99px;
+  background: var(--surface-3);
+  transition: background 0.3s;
+
+  &--filled {
+    background: var(--sand);
+  }
+}
+
+// Steps
+.steps {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  background: var(--surface-1);
+  border-radius: var(--r-lg);
+  border: 1px solid var(--border);
+  padding: 4px 0;
+  overflow: hidden;
+
+  .step__divider {
+    height: 1px;
+    background: var(--border);
+    margin: 0 16px;
+  }
+}
+
+.step {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+
+  &__num {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: rgba(92,160,209,0.12);
+    border: 1px solid rgba(92,160,209,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--blue);
+    flex-shrink: 0;
+  }
+
+  &__text {
+    font-size: 14px;
+    color: var(--t2);
+    line-height: 1.4;
+  }
+}

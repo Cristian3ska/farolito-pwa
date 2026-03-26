@@ -1,0 +1,68 @@
+<div class="qr-page">
+  <div class="nav-header">
+    <p class="nav-header__eyebrow">El Farolito</p>
+    <h1 class="nav-header__title">Código QR</h1>
+    <p class="nav-header__subtitle">Muéstralo al barista para sumar tu sello</p>
+  </div>
+
+  <div class="qr-body">
+
+    <!-- QR Card -->
+    <div class="qr-card">
+      <!-- User pill -->
+      <div class="user-pill">
+        <svg viewBox="0 0 24 24" fill="none" width="14" height="14">
+          <circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="1.6"/>
+          <path d="M4 20c0-3.314 3.582-6 8-6s8 2.686 8 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+        </svg>
+        {{ auth.displayName }}
+      </div>
+
+      <!-- QR Canvas -->
+      <div class="canvas-frame">
+        <canvas #qrCanvas id="qr-canvas"></canvas>
+      </div>
+
+      <!-- Countdown -->
+      <div class="countdown">
+        <div class="countdown__track">
+          <div class="countdown__fill" [style.width.%]="(refreshCountdown() / 30) * 100"></div>
+        </div>
+        <div class="countdown__label">
+          <svg viewBox="0 0 24 24" fill="none" width="13" height="13">
+            <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+          Se renueva en <strong>{{ refreshCountdown() }}s</strong>
+        </div>
+      </div>
+
+      <!-- Stamps strip -->
+      <div class="stamps-strip">
+        <div *ngFor="let s of [0,1,2,3,4,5,6,7,8,9]"
+             class="strip-dot"
+             [class.strip-dot--filled]="s < loyalty.stampsCount">
+        </div>
+      </div>
+      <p class="stamps-strip-label">{{ loyalty.stampsCount }}/10 sellos</p>
+    </div>
+
+    <!-- Steps -->
+    <div class="steps">
+      <div class="step">
+        <div class="step__num">1</div>
+        <p class="step__text">Muestra esta pantalla al barista</p>
+      </div>
+      <div class="step__divider"></div>
+      <div class="step">
+        <div class="step__num">2</div>
+        <p class="step__text">El barista escanea tu código</p>
+      </div>
+      <div class="step__divider"></div>
+      <div class="step">
+        <div class="step__num">3</div>
+        <p class="step__text">Tu sello queda registrado al instante</p>
+      </div>
+    </div>
+
+  </div>
+</div>

@@ -1,0 +1,100 @@
+<!-- Login Page -->
+<div class="login-page">
+
+  <!-- Top glow -->
+  <div class="login-glow"></div>
+
+  <div class="login-wrap">
+
+    <!-- Brand -->
+    <div class="brand">
+      <div class="brand-mark">
+        <img src="icons/circulo-blanco.png" alt="Icono" class="brand-mark-img">
+      </div>
+      <div class="brand-text">
+        <img src="images/farolito-blanco.png" alt="El Farolito" class="brand-logo-img">
+      </div>
+    </div>
+
+    <!-- Choose mode -->
+    <div class="auth-card" *ngIf="mode === 'choose'">
+      <p class="auth-title">Bienvenido de nuevo</p>
+      <p class="auth-subtitle">Accede a tu tarjeta de sellos</p>
+
+      <!-- Google -->
+      <button id="google-login-btn" class="btn btn--google" (click)="loginWithGoogle()" [disabled]="loading()">
+        <svg viewBox="0 0 20 20" width="18" height="18">
+          <path d="M19.6 10.23c0-.68-.06-1.36-.18-2H10v3.8h5.41a4.64 4.64 0 01-2 3.06v2.48h3.23c1.9-1.75 3-4.32 3-7.34z" fill="#4285F4"/>
+          <path d="M10 20c2.7 0 4.97-.9 6.63-2.43l-3.23-2.48c-.9.6-2.04.96-3.4.96-2.6 0-4.8-1.75-5.58-4.12H1.08v2.56A9.99 9.99 0 0010 20z" fill="#34A853"/>
+          <path d="M4.42 11.93A5.97 5.97 0 014.1 10c0-.67.12-1.32.32-1.93V5.51H1.08A9.99 9.99 0 000 10c0 1.61.38 3.14 1.08 4.49l3.34-2.56z" fill="#FBBC05"/>
+          <path d="M10 3.96c1.46 0 2.77.5 3.8 1.49l2.85-2.85C14.96.99 12.69 0 10 0A9.99 9.99 0 001.08 5.51l3.34 2.56C5.2 5.71 7.4 3.96 10 3.96z" fill="#EA4335"/>
+        </svg>
+        <span>{{ loading() ? 'Cargando…' : 'Continuar con Google' }}</span>
+      </button>
+
+      <div class="divider">o</div>
+
+      <!-- Email -->
+      <button id="email-link-btn" class="btn btn--outline-action" (click)="mode = 'email'">
+        <svg viewBox="0 0 24 24" fill="none" width="18" height="18">
+          <rect x="2" y="4" width="20" height="16" rx="3" stroke="currentColor" stroke-width="1.6"/>
+          <path d="M2 8l8.586 5.586a2 2 0 002.828 0L22 8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+        </svg>
+        Acceder con correo
+      </button>
+
+      <p class="legal">Sin contraseña · Acceso rápido y seguro</p>
+    </div>
+
+    <!-- Email input -->
+    <div class="auth-card" *ngIf="mode === 'email'">
+      <button class="back-btn" (click)="mode = 'choose'">
+        <svg viewBox="0 0 24 24" fill="none" width="18" height="18">
+          <path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Volver
+      </button>
+
+      <p class="auth-title">Magic Link</p>
+      <p class="auth-subtitle">Te enviamos un enlace a tu correo</p>
+
+      <div class="field">
+        <label class="field__label">Correo electrónico</label>
+        <input id="email-input" type="email" [(ngModel)]="email"
+               placeholder="tu@correo.com" class="input"
+               (keyup.enter)="sendMagicLink()"/>
+      </div>
+
+      <button id="send-link-btn" class="btn btn--primary" (click)="sendMagicLink()" [disabled]="loading() || !email">
+        <svg *ngIf="!loading()" viewBox="0 0 24 24" fill="none" width="18" height="18">
+          <path d="M22 2L11 13M22 2L15 22l-4-9-9-4 20-7z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span class="spinner" *ngIf="loading()"></span>
+        {{ loading() ? '' : 'Enviar enlace' }}
+      </button>
+    </div>
+
+    <!-- Sent -->
+    <div class="auth-card auth-card--success" *ngIf="mode === 'email-sent'">
+      <div class="success-icon">
+        <svg viewBox="0 0 24 24" fill="none" width="28" height="28">
+          <rect x="2" y="4" width="20" height="16" rx="3" stroke="var(--blue)" stroke-width="1.6"/>
+          <path d="M2 8l8.586 5.586a2 2 0 002.828 0L22 8" stroke="var(--blue)" stroke-width="1.6" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <p class="auth-title">¡Revisa tu correo!</p>
+      <p class="auth-subtitle">Enviamos un enlace a<br><strong>{{ email }}</strong></p>
+      <button class="btn btn--ghost mt-16" (click)="mode = 'choose'">Volver al inicio</button>
+    </div>
+
+    <!-- Error -->
+    <div class="error-banner" *ngIf="error()">
+      <svg viewBox="0 0 24 24" fill="none" width="16" height="16">
+        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.6"/>
+        <path d="M12 8v4M12 16h.01" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
+      {{ error() }}
+    </div>
+
+  </div>
+</div>

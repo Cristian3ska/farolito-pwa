@@ -1,0 +1,256 @@
+<div class="barista-page">
+  <div class="nav-header">
+    <p class="nav-header__eyebrow">El Farolito</p>
+    <h1 class="nav-header__title">Panel Barista</h1>
+  </div>
+
+  <!-- View Switcher -->
+  <div class="mode-tabs">
+    <button class="mode-tab" [class.mode-tab--active]="activeTab() === 'scan'" (click)="switchTab('scan')">
+      Escáner QR
+    </button>
+    <button class="mode-tab" [class.mode-tab--active]="activeTab() === 'email'" (click)="switchTab('email')">
+      Buscar Cliente
+    </button>
+    <button class="mode-tab" [class.mode-tab--active]="activeTab() === 'menu'" (click)="switchTab('menu')">
+      Editar Menú
+    </button>
+  </div>
+
+  <!-- Tab: Escáner QR -->
+  <div class="barista-section" *ngIf="activeTab() === 'scan' && !foundCard()">
+    <div class="scanner-container">
+      <div id="reader" class="scanner-viewport"></div>
+      
+      <!-- Scan Success Anim -->
+      <div class="scan-success-overlay" *ngIf="scanSuccessAnim()">
+        <div class="check-circle">
+          <svg viewBox="0 0 24 24" fill="none" width="48" height="48">
+            <path class="check-path" d="M20 6L9 17l-5-5" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+      </div>
+
+      <p class="scanner-hint" *ngIf="scannerActive()">
+        Apunta la cámara al código QR del cliente
+      </p>
+      <div class="scanner-loading" *ngIf="!scannerActive() && !message()">
+        <span class="spinner"></span>
+        Iniciando cámara...
+      </div>
+    </div>
+  </div>
+
+  <!-- Tab: Search -->
+  <div class="barista-section" *ngIf="activeTab() === 'email' && !foundCard()">
+    
+    <!-- Search bar -->
+    <div class="search-row">
+      <div class="search-input-wrap">
+        <svg viewBox="0 0 24 24" fill="none" width="16" height="16" class="search-icon">
+          <circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="1.6"/>
+          <path d="M21 21l-4.35-4.35" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+        </svg>
+        <input
+          id="search-email-input"
+          type="text"
+          [(ngModel)]="customerFilter"
+          placeholder="Buscar por nombre o correo..."
+          class="search-input"
+        />
+      </div>
+      <button id="refresh-btn" class="search-btn" (click)="loadCustomers()" [disabled]="customersLoading()" title="Actualizar">
+        <svg viewBox="0 0 24 24" fill="none" width="16" height="16">
+          <path d="M23 4v6h-6M1 20v-6h6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Loading -->
+    <div class="scanner-loading" *ngIf="customersLoading()" style="padding:32px">
+      <span class="spinner"></span> Cargando clientes...
+    </div>
+
+    <!-- Customer list -->
+    <div class="customer-list" *ngIf="!customersLoading()">
+      <p class="customer-list__count" *ngIf="allCustomers().length > 0">
+        {{ filteredCustomers.length }} de {{ allCustomers().length }} clientes
+      </p>
+
+      <div class="customer-list-item"
+           *ngFor="let c of filteredCustomers"
+           (click)="foundCard.set(c)">
+        <div class="cli-avatar">{{ c.name?.charAt(0)?.toUpperCase() || '?' }}</div>
+        <div class="cli-info">
+          <p class="cli-name">{{ c.name || 'Sin nombre' }}</p>
+          <p class="cli-email">{{ c.email }}</p>
+        </div>
+        <div class="cli-stamps">
+          <span class="cli-badge">{{ c.stamps }}/{{ c.maxStamps }}</span>
+          <svg viewBox="0 0 24 24" fill="none" width="16" height="16" class="cli-chevron">
+            <path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Empty state -->
+      <div class="customer-empty" *ngIf="allCustomers().length === 0">
+        <p>Aún no hay clientes registrados.</p>
+      </div>
+      <div class="customer-empty" *ngIf="allCustomers().length > 0 && filteredCustomers.length === 0">
+        <p>No se encontraron resultados.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tab: Menu Editing -->
+  <div class="barista-section" *ngIf="activeTab() === 'menu' && !foundCard()">
+    <div class="menu-editor" *ngIf="!editingItem()">
+      <div style="display:flex; gap:12px; margin-bottom:16px;">
+        <button class="btn btn--primary" (click)="startNewMenuItem()">+ Agregar Producto</button>
+      </div>
+      
+      <div class="menu-editor-list">
+        <div class="menu-editor-item" *ngFor="let item of menuService.items()">
+          <div class="menu-editor-item__info">
+            <strong>{{ item.emoji }} {{ item.name }}</strong>
+            <span class="price-badge">{{ item.price }}</span>
+            <p>{{ item.category }}</p>
+          </div>
+          <div class="menu-editor-item__actions">
+            <button class="btn-icon" (click)="editMenuItem(item)">✏️</button>
+            <button class="btn-icon btn-icon--danger" (click)="deleteMenuItem(item.id!)">🗑</button>
+          </div>
+        </div>
+        <p *ngIf="menuService.items().length === 0" style="color:var(--t3);text-align:center;">Agrega tu primer producto.</p>
+      </div>
+    </div>
+
+    <!-- Menu Form -->
+    <div class="menu-form" *ngIf="editingItem()">
+      <h4>{{ editingItem()?.id ? 'Editar' : 'Nuevo' }} Producto</h4>
+      
+      <div class="field">
+        <label>Nombre</label>
+        <input type="text" class="input" [(ngModel)]="editingItem()!.name" placeholder="Ej. Capuccino">
+      </div>
+      
+      <div class="field">
+        <label>Descripción</label>
+        <input type="text" class="input" [(ngModel)]="editingItem()!.description" placeholder="Ingredientes...">
+      </div>
+      
+      <div class="row">
+        <div class="field col-6">
+          <label>Precio</label>
+          <input type="text" class="input" [(ngModel)]="editingItem()!.price" placeholder="$60">
+        </div>
+        <div class="field col-6">
+          <label>Icono/Emoji</label>
+          <input type="text" class="input" [(ngModel)]="editingItem()!.emoji" placeholder="☕">
+        </div>
+      </div>
+      
+      <!-- Categoría: Selector -->
+      <div class="field" *ngIf="!addingCategory()">
+        <label>Categoría</label>
+        <div class="select-wrap">
+          <select class="input select-input" [(ngModel)]="editingItem()!.category">
+            <option *ngFor="let cat of menuService.categories()" [value]="cat">{{ cat }}</option>
+          </select>
+          <button type="button" class="add-cat-btn" (click)="addingCategory.set(true)">
+            + Nueva categoría
+          </button>
+        </div>
+      </div>
+
+      <!-- Categoría: Nueva -->
+      <div class="field" *ngIf="addingCategory()">
+        <label>Nueva Categoría</label>
+        <div class="new-cat-row">
+          <input type="text" class="input" [(ngModel)]="newCategoryInput" placeholder="Ej. Sin Lactáceos" (keyup.enter)="confirmNewCategory()">
+          <button type="button" class="btn btn--primary" (click)="confirmNewCategory()">Añadir</button>
+          <button type="button" class="btn btn--ghost" (click)="addingCategory.set(false)">Cancelar</button>
+        </div>
+      </div>
+      
+      <div class="form-actions">
+        <button class="btn btn--ghost" (click)="cancelMenuEdit()">Cancelar</button>
+        <button class="btn btn--primary" (click)="saveMenuItem()" [disabled]="processing()">Guardar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Feedback (Error banner) -->
+  <div class="feedback" *ngIf="message() && !foundCard()"
+       [class.feedback--success]="messageType() === 'success'"
+       [class.feedback--error]="messageType() === 'error'">
+    <svg viewBox="0 0 24 24" fill="none" width="16" height="16">
+      <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.6"/>
+      <path *ngIf="messageType() === 'success'" d="M8 12l3 3 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      <path *ngIf="messageType() === 'error'" d="M12 8v4M12 16h.01" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+    </svg>
+    {{ message() }}
+  </div>
+
+  <!-- Found customer -->
+  <div class="barista-section" *ngIf="foundCard()">
+    <div class="customer-card">
+      <!-- Success specific feedback inside card -->
+      <div class="feedback-inline" *ngIf="message()"
+          [class.feedback-inline--success]="messageType() === 'success'">
+        <svg viewBox="0 0 24 24" fill="none" width="16" height="16">
+          <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.6"/>
+          <path *ngIf="messageType() === 'success'" d="M8 12l3 3 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        {{ message() }}
+      </div>
+
+      <!-- Header -->
+      <div class="customer-card__header">
+        <div class="customer-card__avatar">
+          {{ foundCard()?.name?.charAt(0)?.toUpperCase() || '?' }}
+        </div>
+        <div>
+          <p class="customer-card__name">{{ foundCard()?.name || 'Cliente' }}</p>
+          <p class="customer-card__email">{{ foundCard()?.email || searchEmail }}</p>
+        </div>
+      </div>
+
+      <!-- Stamps -->
+      <div class="customer-stamps">
+        <div class="customer-stamps__header">
+          <span class="customer-stamps__count">{{ foundCard()?.stamps ?? 0 }}/10</span>
+          <span class="customer-stamps__label">sellos acumulados</span>
+        </div>
+        <div class="customer-stamps__grid">
+          <div *ngFor="let s of stampsArray; let i = index"
+               class="c-stamp"
+               [class.c-stamp--filled]="s === 1">
+            <img *ngIf="s === 1" src="icons/circulo-blanco.png" alt="Sello" class="c-stamp-icon">
+          </div>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-bar__fill" [style.width.%]="(foundCard()?.stamps ?? 0) * 10"></div>
+        </div>
+      </div>
+
+      <!-- CTA -->
+      <button id="add-stamp-btn" class="add-stamp-btn" (click)="addStampToFound()" [disabled]="processing()">
+        <svg *ngIf="!processing()" viewBox="0 0 24 24" fill="none" width="18" height="18">
+          <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.6"/>
+          <path d="M12 8v8M8 12h8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+        </svg>
+        <span class="spinner" *ngIf="processing()"></span>
+        {{ processing() ? '' : 'Agregar sello' }}
+      </button>
+
+      <!-- Back button -->
+      <button class="back-btn" (click)="foundCard.set(null); startScanner(); message.set('')">
+        Cancelar y buscar a otro
+      </button>
+    </div>
+  </div>
+
+</div>

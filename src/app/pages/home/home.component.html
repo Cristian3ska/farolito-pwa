@@ -1,0 +1,157 @@
+<!-- Home Page -->
+<div class="home">
+
+  <!-- Header -->
+  <header class="home-header">
+    <div class="home-header__left">
+      <p class="home-header__eyebrow">{{ greeting }},</p>
+      <h1 class="home-header__name">{{ auth.displayName }}</h1>
+    </div>
+    <div class="home-header__avatar" routerLink="/profile">
+      <img *ngIf="auth.photoURL" [src]="auth.photoURL" [alt]="auth.displayName" class="avatar">
+      <div *ngIf="!auth.photoURL" class="avatar avatar--text">
+        {{ auth.displayName.charAt(0).toUpperCase() }}
+      </div>
+    </div>
+  </header>
+
+  <!-- Loyalty Card -->
+  <section class="section">
+    <div class="loyalty-card">
+      <!-- Card Top -->
+      <div class="loyalty-card__top">
+        <div>
+          <p class="loyalty-card__label">Tu tarjeta</p>
+          <p class="loyalty-card__count">
+            <span class="loyalty-card__num">{{ loyalty.stampsCount }}</span>
+            <span class="loyalty-card__denom">/10 cafés</span>
+          </p>
+        </div>
+        
+        <!-- Farolito logo center -->
+        <div class="loyalty-card__logo">
+          <img src="images/farolito-blanco.png" alt="El Farolito">
+        </div>
+
+        <!-- Progress ring -->
+        <div class="progress-ring">
+          <svg viewBox="0 0 44 44" width="44" height="44">
+            <circle cx="22" cy="22" r="18" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="4"/>
+            <circle cx="22" cy="22" r="18" fill="none" stroke="var(--blue)" stroke-width="4"
+              stroke-dasharray="113.1"
+              [attr.stroke-dashoffset]="113.1 - (113.1 * loyalty.stampsCount / 10)"
+              stroke-linecap="round"
+              transform="rotate(-90 22 22)"/>
+          </svg>
+          <span class="progress-ring__pct">{{ (loyalty.stampsCount * 10) }}%</span>
+        </div>
+      </div>
+
+      <!-- Stamps grid -->
+      <div class="stamps-grid">
+        <div *ngFor="let stamp of stamps; let i = index"
+             class="stamp"
+             [class.stamp--filled]="i < stampsEarned"
+             [class.stamp--next]="i === stampsEarned"
+             [style.animation-delay]="i * 0.05 + 's'">
+          <img *ngIf="i < stampsEarned" src="icons/circulo-blanco.png" alt="Sello" class="stamp-icon">
+        </div>
+      </div>
+
+      <!-- Progress bar -->
+      <div class="loyalty-card__bar">
+        <div class="loyalty-card__bar-fill" [style.width.%]="loyalty.stampsCount * 10"></div>
+      </div>
+
+      <p class="loyalty-card__note" *ngIf="loyalty.stampsCount < 10">
+        Faltan <strong>{{ 10 - loyalty.stampsCount }}</strong> sellos para tu café gratis
+      </p>
+      <p class="loyalty-card__note loyalty-card__note--ready" *ngIf="loyalty.stampsCount >= 10">
+        Tu próximo café es gratis — muestra tu QR
+      </p>
+    </div>
+  </section>
+
+  <!-- Quick Actions -->
+  <section class="section">
+    <p class="section-label">Acciones</p>
+    <div class="actions-grid">
+
+      <button class="action-row" routerLink="/qr" id="show-qr-btn">
+        <div class="action-row__icon action-row__icon--blue">
+          <svg viewBox="0 0 24 24" fill="none" width="20" height="20">
+            <rect x="3" y="3" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.6"/>
+            <rect x="5" y="5" width="3" height="3" rx="0.5" fill="currentColor"/>
+            <rect x="14" y="3" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.6"/>
+            <rect x="16" y="5" width="3" height="3" rx="0.5" fill="currentColor"/>
+            <rect x="3" y="14" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.6"/>
+            <rect x="5" y="16" width="3" height="3" rx="0.5" fill="currentColor"/>
+            <path d="M14 14h2v2m0 0h2v-2m-2 2v2h2m2-6v2h-2m0 4h2v2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="action-row__text">
+          <span class="action-row__title">Mostrar código QR</span>
+          <span class="action-row__sub">Para sumar tu sello</span>
+        </div>
+        <svg class="action-row__chevron" viewBox="0 0 24 24" fill="none" width="16" height="16">
+          <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+
+      <button class="action-row" routerLink="/menu" id="view-menu-btn">
+        <div class="action-row__icon action-row__icon--steel">
+          <svg viewBox="0 0 24 24" fill="none" width="20" height="20">
+            <path d="M17 8h1a4 4 0 010 8h-1" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+            <path d="M3 8h14v9a4 4 0 01-4 4H7a4 4 0 01-4-4V8z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="action-row__text">
+          <span class="action-row__title">Menú del día</span>
+          <span class="action-row__sub">Métodos y bebidas</span>
+        </div>
+        <svg class="action-row__chevron" viewBox="0 0 24 24" fill="none" width="16" height="16">
+          <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+
+      <button class="action-row" routerLink="/profile" id="view-history-btn">
+        <div class="action-row__icon action-row__icon--sand">
+          <svg viewBox="0 0 24 24" fill="none" width="20" height="20">
+            <path d="M12 8v4l2.5 2.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+            <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6"/>
+          </svg>
+        </div>
+        <div class="action-row__text">
+          <span class="action-row__title">Historial</span>
+          <span class="action-row__sub">Mis visitas</span>
+        </div>
+        <svg class="action-row__chevron" viewBox="0 0 24 24" fill="none" width="16" height="16">
+          <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+
+      <button class="action-row" routerLink="/barista" id="barista-btn" *ngIf="auth.isAdmin">
+        <div class="action-row__icon action-row__icon--plum">
+          <svg viewBox="0 0 24 24" fill="none" width="20" height="20">
+            <circle cx="9" cy="7" r="4" stroke="currentColor" stroke-width="1.6"/>
+            <path d="M3 21v-1a6 6 0 016-6h0a6 6 0 016 6v1" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+            <path d="M16 11l2 2 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="action-row__text">
+          <span class="action-row__title">Panel Barista</span>
+          <span class="action-row__sub">Gestión de sellos</span>
+        </div>
+        <svg class="action-row__chevron" viewBox="0 0 24 24" fill="none" width="16" height="16">
+          <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+
+    </div>
+  </section>
+
+  <!-- Loading -->
+  <div class="full-loader" *ngIf="loyalty.loading()">
+    <div class="spinner"></div>
+  </div>
+</div>
